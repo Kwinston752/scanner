@@ -1,6 +1,6 @@
 import { Filter } from "../../components/Filters"
 import { Box } from '@mui/material';
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { binanceApi } from './../../../../api/binance/index';
 import { Order } from "../../models/Order";
 import { Orders } from "../Orders";
@@ -9,10 +9,11 @@ import { Orders } from "../Orders";
 export const RootPage = () => {
   const [filters, setFilters] = useState({
     tradeType: 'BUY',
-    limit: '5000',
+    limit: '',
     payTypes: ['KaspiBank']
   })
   const [orders, setOrders] = useState<Order[]>([])
+  const [isLoading, setIsLoading] = useState(true)
 
   const handleFilterChange = (filterName: 'tradeType' | 'limit' | 'payTypes', newValue: string & string[]) => {
     setFilters(prevState => ({
@@ -23,9 +24,15 @@ export const RootPage = () => {
   }
 
   const handleFilterClick = async () => {
+    setIsLoading(true)
     const response = await binanceApi.getRates(filters.tradeType, filters.limit, filters.payTypes)
-    setOrders(JSON.parse(response.data).data)
+    await setOrders(JSON.parse(response.data).data)
+    setIsLoading(false)
   }
+
+  useEffect(() => {
+    handleFilterClick()
+  }, [])
 
   return (
     <Box
@@ -43,6 +50,7 @@ export const RootPage = () => {
       />
       <Orders
         data={orders}
+        isLoading={isLoading}
       />
     </Box>
   )

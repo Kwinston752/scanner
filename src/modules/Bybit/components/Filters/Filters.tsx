@@ -1,8 +1,16 @@
-import { Button, Box, FormControl, InputLabel, MenuItem, Select, TextField, Typography } from '@mui/material';
+import { Box, Button, Typography, TextField, FormControl, InputLabel, Select, MenuItem } from '@mui/material';
 
 
-export const Filter = (props: any) => {
-  const { tradeType, limit, payTypes, handleFilter, fetchOrders} = props
+interface FiltersProps {
+  limit: string
+  tradeType: number
+  payType: string
+  handleFilter: (filterName: 'limit' | 'tradeType' | 'payType', newValue: string | number) => void
+  fetchOrders: () => void
+}
+
+export const Filters = (props: FiltersProps) => {
+  const { limit, tradeType, payType, handleFilter, fetchOrders } = props
 
   return (
     <Box>
@@ -26,10 +34,11 @@ export const Filter = (props: any) => {
               color: 'white'
             }}
           >
-            <MenuItem value={'BUY'}>Покупка</MenuItem>
-            <MenuItem value={'SELL'}>Продажа</MenuItem>
+            <MenuItem value={1}>Покупка</MenuItem>
+            <MenuItem value={0}>Продажа</MenuItem>
           </Select>
         </FormControl>
+
         <TextField
           size="small"
           label="Сумма"
@@ -43,13 +52,13 @@ export const Filter = (props: any) => {
             input: { color: 'white' }
           }}
         />
+
         <FormControl fullWidth>
           <InputLabel sx={{color: 'white'}}>Оплата</InputLabel>
           <Select
-            value={payTypes}
-            onChange={(e) => handleFilter('payTypes', e.target.value)}
+            value={payType}
+            onChange={(e) => handleFilter('payType', e.target.value)}
             size="small"
-            multiple
 
             sx={{
               background: '#232931',
@@ -58,22 +67,26 @@ export const Filter = (props: any) => {
               color: 'white'
             }}
           >
-            <MenuItem value={'KaspiBank'}>Kaspi Bank</MenuItem>
-            <MenuItem value={'HalykBank'}>Halyk Bank</MenuItem>
-            <MenuItem value={'JysanBank'}>Jysan Bank</MenuItem>
-            <MenuItem value={'ForteBank'}>Forte Bank</MenuItem>
-            <MenuItem value={'EurasianBank'}>Eurasian Bank</MenuItem>
-            <MenuItem value={'CenterCreditBank'}>CenterCredit Bank</MenuItem>
-            <MenuItem value={'AltynBank'}>Altyn Bank</MenuItem>
-            <MenuItem value={'AdvCash'}>AdvCash</MenuItem>
-            <MenuItem value={'QIWI'}>QIWI</MenuItem>
+            <MenuItem value={''}>Все способы оплаты</MenuItem>
+            <MenuItem value={'150'}>Kaspi Bank</MenuItem>
+            <MenuItem value={'203'}>Halyk Bank</MenuItem>
+            <MenuItem value={'149'}>Jysan Bank</MenuItem>
+            <MenuItem value={'144'}>Forte Bank</MenuItem>
+            <MenuItem value={'262'}>Eurasian Bank</MenuItem>
+            <MenuItem value={'211'}>CenterCredit Bank</MenuItem>
+            <MenuItem value={'280'}>Altyn Bank</MenuItem>
+            <MenuItem value={'5'}>AdvCash</MenuItem>
+            <MenuItem value={'62'}>QIWI</MenuItem>
           </Select>
         </FormControl>
+
         <Button
           variant="contained"
+          color="warning"
           size="small"
           sx={{
             width: '200px',
+            color: 'white'
           }}
           onClick = {() => fetchOrders()}
         >
